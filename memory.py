@@ -55,13 +55,11 @@ class MemoryDemo:
         memory = ConversationSummaryBufferMemory(llm=llm, max_token_limit=max_token_limit)
         memory.save_context({"input": "Hello"}, {"output": "What's up"})
         memory.save_context({"input": "Not much, just hanging"}, {"output": "Cool"})
-        #memory.save_context({"input": "What is on the schedule today?"}, {"output": f"{schedule}"})
+        memory.save_context({"input": "What is on the schedule today?"}, {"output": f"{schedule}"})
         print(f"Memory variables ConversationSummaryBufferMemory: {memory.load_memory_variables({})}\n")
 
 if __name__ == "__main__":
     lang_chain_manager = LangChainManager()
-    print(f"Lang Chain Manager: {lang_chain_manager}")
-
     MemoryDemo.demonstrate_conversation_buffer_memory(lang_chain_manager.llm_model)
     MemoryDemo.demonstrate_conversation_buffer_window_memory(lang_chain_manager.llm_model)
     MemoryDemo.demonstrate_conversation_token_buffer_memory(lang_chain_manager.llm_model)
