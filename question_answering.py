@@ -16,6 +16,34 @@ from dotenv import load_dotenv, find_dotenv
 _ = load_dotenv(find_dotenv())  # read local .env file
 openai.api_key = os.environ['OPENAI_API_KEY']
 
+class LangChainManager:
+    @staticmethod
+    def initialize_llm():
+        """Initialize the LLM."""
+        current_date = datetime.datetime.now().date()
+        if current_date < datetime.date(2023, 9, 2):
+            llm_name = "gpt-3.5-turbo-0301"
+        else:
+            llm_name = "gpt-3.5-turbo"
+        print(llm_name)
+        return ChatOpenAI(model_name=llm_name, temperature=0)
+
+    @staticmethod
+    def note_langchain_plus():
+        """Note about LangChain Plus platform."""
+        print("""If you wish to experiment on the `LangChain plus platform`:
+        
+        * Go to [langchain plus platform](https://www.langchain.plus/) and sign up
+        * Create an API key from your account's settings
+        * Use this API key in the code below
+        * uncomment the code  
+        Note, the endpoint in the video differs from the one below. Use the one below.
+
+        #import os
+        #os.environ["LANGCHAIN_TRACING_V2"] = "true"
+        #os.environ["LANGCHAIN_ENDPOINT"] = "https://api.langchain.plus"
+        #os.environ["LANGCHAIN_API_KEY"] = "..." # replace dots with your api key
+        """)
 
 class VectorStoreManager:
     @staticmethod
@@ -101,7 +129,8 @@ if __name__ == "__main__":
     embedding = OpenAIEmbeddings()
     vectordb = VectorStoreManager.create_vector_store(embedding, persist_directory)
 
-    llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+    #llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+    llm = LangChainManager.initialize_llm()
 
     question = "What are major topics for this class?"
     QuestionAnsweringManager.run_retrieval_qa_chain(llm, vectordb, question)
@@ -118,3 +147,4 @@ if __name__ == "__main__":
     QuestionAnsweringManager.run_retrieval_qa_specify_chain_type(llm, vectordb, chain_type="map_reduce", question=question)
 
     QuestionAnsweringManager.demonstrate_qa_limitations(llm, vectordb)
+    LangChainManager.note_langchain_plus()
